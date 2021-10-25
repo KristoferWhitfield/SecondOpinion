@@ -1,0 +1,32 @@
+body {
+  background-color: #008e8f;
+}
+h1 {
+  clear: both;
+  font-size: 37px;
+  text-align: center;
+}
+
+p {
+  text-align: left;
+  font-size: 35px;
+  font-family: "Bebas Neue", cursive;
+}
+section {
+  height: 400px;
+  padding-left: 20px;
+}
+h2 {
+  text-align: left;
+  font-size: 35px;
+  font-family: "Bebas Neue", cursive;
+}
+
+.jumbotron {
+  height: 550px;
+}
+
+img {
+  float: left;
+  height: 300px;
+}
