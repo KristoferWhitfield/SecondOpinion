@@ -4,7 +4,7 @@ This application allows the user to track vitals and upload pertinent documentat
 and give them a second opinion. There's a user login and a provider login; the provider can send messages to the user for their second opinion. There's also a database
 of providers the user can search by specality. 
 
-![screenshot](https://raw.githubusercontent.com/KristoferWhitfield/SecondOpinion/main/User%20Page.JPG)
+![screenshot](https://raw.githubusercontent.com/KristoferWhitfield/SecondOpinion/main/userpage.JPG)
 
 ## Hows It's Made:
 
