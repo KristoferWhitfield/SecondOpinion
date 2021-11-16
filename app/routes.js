@@ -1,4 +1,34 @@
 module.exports = function (app, passport, db) {
+//multer
+const fs = require('fs');
+const path = require('path');
+
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+var upload = multer({ storage: storage });
+
+app.post('/issue', upload.single('image'), (req, res, next) => {
+  const imageData = fs.readFileSync(path.join(__dirname + '/../uploads/' + req.file.filename))
+  db.collection("issue").save(
+    { date: new Date(), imageData, description: req.body.description },
+    (err, result) => {
+      if (err) return console.log(err);
+      console.log("saved to database");
+      res.redirect("/profile");
+    }
+  );
+
+
+});
   // normal routes ===============================================================
 
   // show the home page (will also have our login links)
@@ -12,10 +42,17 @@ module.exports = function (app, passport, db) {
       .find()
       .toArray((err, result) => {
         if (err) return console.log(err);
-        res.render("profile.ejs", {
-          user: req.user,
-          userVitals: result,
-        });
+        db.collection("issue")
+          .find()
+          .toArray((err, issues) => {
+            if (err) return console.log(err);
+            res.render("profile.ejs", {
+              user: req.user,
+              userVitals: result,
+              issues: issues
+            });
+          });
+
       });
   });
 

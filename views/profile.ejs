@@ -68,6 +68,38 @@
           <% } %>
           </ul>
 
+  <!-- imag upload form -->
+          <div>
+          <form action="/issue" method="POST" enctype="multipart/form-data">
+              <div>
+                  <label for="name">Describe health issue</label>
+                  <input type="text" id="name" placeholder="Name"
+                         value="" name="description" required>
+              </div>
+              <div>
+                  <label for="image">Upload Image</label>
+                  <input type="file" id="image"
+                         name="image" value="" required>
+              </div>
+              <div>
+                  <button type="submit">Submit</button>
+              </div>
+          </form>
+          <ul class="vitals">
+          <% for(var i=0; i<issues.length; i++) {%>
+            <li class="vitals">
+              <span><%= issues[i].date %></span>
+              <span><%= issues[i].description %></span>
+              <img src="data:image/jpeg;base64,
+                   <%=issues[i].imageData.toString('base64')%>">
+              <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span>
+            </li>
+          <% } %>
+          </ul>
+
+      </div>
+
+
           <h2>Add your vitals</h2>
         <% if (user.local.email) { %>
           <form action="/vitals" method="POST">
