@@ -56,6 +56,22 @@ app.post('/issue', upload.single('image'), (req, res, next) => {
       });
   });
 
+  // DR PROFILE SECTION =========================
+  app.get("/docProfile", isLoggedIn, function (req, res) {
+
+        db.collection("issue")
+          .find()
+          .toArray((err, issues) => {
+            if (err) return console.log(err);
+            res.render("docProfile.ejs", {
+              user: req.user,
+              issues: issues
+            });
+          });
+
+      });
+
+
   // LOGOUT ==============================
   app.get("/logout", function (req, res) {
     req.logout();
@@ -172,6 +188,44 @@ app.post('/issue', upload.single('image'), (req, res, next) => {
       res.redirect("/profile");
     });
   });
+
+  // =============================================================================
+  // AUTHENTICATE (FIRST LOGIN) ==================================================
+  // =============================================================================
+  //Dr Login
+  // locally --------------------------------
+  // LOGIN ===============================
+  // show the login form
+  app.get("/docLogin", function (req, res) {
+    res.render("docLogin.ejs", { message: req.flash("loginMessage") });
+  });
+
+  // process the login form
+  app.post(
+    "/docLogin",
+    passport.authenticate("local-login", {
+      successRedirect: "/docProfile", // redirect to the secure profile section
+      failureRedirect: "/docSignup", // redirect back to the signup page if there is an error
+      failureFlash: true, // allow flash messages
+    })
+  );
+
+  // SIGNUP =================================
+  // show the signup form
+  app.get("/docSignup", function (req, res) {
+    res.render("docSignup.ejs", { message: req.flash("signupMessage") });
+  });
+
+  // process the signup form
+  app.post(
+    "/docSignup",
+    passport.authenticate("local-signup", {
+      successRedirect: "/docProfile", // redirect to the secure profile section
+      failureRedirect: "/docSignup", // redirect back to the signup page if there is an error
+      failureFlash: true, // allow flash messages
+    })
+  );
+
 };
 
 // route middleware to ensure user is logged in
