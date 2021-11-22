@@ -64,13 +64,33 @@
                    <%=issues[i].imageData.toString('base64')%>">
               <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span>
             </li>
+
+            <% for (let j = 0; j <responses.length; j++) {%>
+            <ul>
+              <li class="responses">
+                <p><%= responses[j].responses %></p>
+              </li>
+
+            </ul>
+            <% } %>
+
+            <form action="/docResponse" method="POST" enctype="application/x-www-form-urlencoded">
+                <div>
+                    <label for="responses">Diagnosis</label>
+                    <input type="text" id="name" placeholder="Diagnosis"
+                           value="" name="responses" required>
+                </div>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
           <% } %>
           </ul>
 
       </div>
 
 
-    
+
 <!-- this section is where the user will be able to see where the provider answered a request -->
 <section>
   <h2>Answered Request</h2>

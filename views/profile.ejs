@@ -92,6 +92,14 @@
               <span><%= issues[i].description %></span>
               <img src="data:image/jpeg;base64,
                    <%=issues[i].imageData.toString('base64')%>">
+                   <% for (let j = 0; j <responses.length; j++) {%>
+                   <ul>
+                     <li class="responses">
+                       <p><%= responses[j].responses %></p>
+                     </li>
+
+                   </ul>
+                   <% } %>
               <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span>
             </li>
           <% } %>

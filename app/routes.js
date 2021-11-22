@@ -1,4 +1,4 @@
-module.exports = function (app, passport, db) {
+module.exports = function (app, passport, db, ObjectId) {
 //multer
 const fs = require('fs');
 const path = require('path');
@@ -46,9 +46,14 @@ app.post('/issue', upload.single('image'), (req, res, next) => {
           .find()
           .toArray((err, issues) => {
             if (err) return console.log(err);
+            db.collection("responses")
+              .find()
+              .toArray((err, message) => {
+                if (err) return console.log(err);
             res.render("profile.ejs", {
               user: req.user,
               userVitals: result,
+              responses: message,
               issues: issues
             });
           });
@@ -63,14 +68,19 @@ app.post('/issue', upload.single('image'), (req, res, next) => {
           .find()
           .toArray((err, issues) => {
             if (err) return console.log(err);
+            db.collection("responses")
+              .find()
+              .toArray((err, result) => {
+                if (err) return console.log(err);
             res.render("docProfile.ejs", {
               user: req.user,
+              responses: result,
               issues: issues
             });
           });
-
+        });
       });
-
+  });
 
   // LOGOUT ==============================
   app.get("/logout", function (req, res) {
@@ -79,6 +89,16 @@ app.post('/issue', upload.single('image'), (req, res, next) => {
   });
 
   // message board routes ===============================================================
+  app.post("/docResponse", (req, res) => {
+    db.collection("responses").save(
+      { responses: req.body.responses },
+      (err, result) => {
+        if (err) return console.log(err);
+        console.log("saved to database");
+        res.redirect("/docProfile");
+      }
+    );
+  });
 
   app.post("/vitals", (req, res) => {
     db.collection("userVitals").save(
