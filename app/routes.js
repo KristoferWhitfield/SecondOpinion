@@ -2,9 +2,9 @@ module.exports = function (app, passport, db, ObjectId) {
 //multer
 const fs = require('fs');
 const path = require('path');
-
+// const textract = require('textract');
 const multer = require('multer');
-
+const ocrad = require('async-ocrad');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads')
@@ -15,9 +15,16 @@ const storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage });
-
-app.post('/issue', upload.single('image'), (req, res, next) => {
-  const imageData = fs.readFileSync(path.join(__dirname + '/../uploads/' + req.file.filename))
+// const config = {}
+app.post('/issue', upload.single('image'), async(req, res, next) => {
+  const imageFile = path.join(__dirname + '/../uploads/' + req.file.filename)
+  const imageData = fs.readFileSync(imageFile)
+  // console.log(imageFile)
+  // textract.fromFileWithMimeAndPath("image/jpeg", imageFile, config, function( error, text ) {
+  //   console.log("ocr", error, text)
+  // })
+  const text = await ocrad(imageFile);
+   console.log(text);
   db.collection("issue").save(
     { date: new Date(), imageData, description: req.body.description },
     (err, result) => {
