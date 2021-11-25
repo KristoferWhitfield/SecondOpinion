@@ -12,6 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+  <% if( user.local.userType === "doctor") {%>
 <div class="container">
 
     <header>
@@ -97,6 +98,9 @@
 
 </section>
 
+<% } else {%>
+  <p>Error please login to patient portal <a href="/login">Login</a></p>
+  <% }  %>
 
 
 <script src="main.js"></script>

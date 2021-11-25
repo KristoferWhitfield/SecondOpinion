@@ -1,41 +1,44 @@
 module.exports = function (app, passport, db, ObjectId) {
-//multer
-const fs = require('fs');
-const path = require('path');
-// const textract = require('textract');
-const multer = require('multer');
-const ocrad = require('async-ocrad');
-const storage = multer.diskStorage({
+  //multer
+  const fs = require("fs");
+  const path = require("path");
+  // const textract = require('textract');
+  const multer = require("multer");
+  const ocrad = require("async-ocrad");
+  const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads')
+      cb(null, "uploads");
     },
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-});
+      cb(null, file.fieldname + "-" + Date.now());
+    },
+  });
 
-var upload = multer({ storage: storage });
-// const config = {}
-app.post('/issue', upload.single('image'), async(req, res, next) => {
-  const imageFile = path.join(__dirname + '/../uploads/' + req.file.filename)
-  const imageData = fs.readFileSync(imageFile)
-  // console.log(imageFile)
-  // textract.fromFileWithMimeAndPath("image/jpeg", imageFile, config, function( error, text ) {
-  //   console.log("ocr", error, text)
-  // })
-  const text = await ocrad(imageFile);
-   console.log(text);
-  db.collection("issue").save(
-    { date: new Date(), imageData, description: req.body.description },
-    (err, result) => {
-      if (err) return console.log(err);
-      console.log("saved to database");
-      res.redirect("/profile");
-    }
-  );
-
-
-});
+  var upload = multer({ storage: storage });
+  // const config = {}
+  app.post("/issue", upload.single("image"), async (req, res, next) => {
+    const imageFile = path.join(__dirname + "/../uploads/" + req.file.filename);
+    const imageData = fs.readFileSync(imageFile);
+    // console.log(imageFile)
+    // textract.fromFileWithMimeAndPath("image/jpeg", imageFile, config, function( error, text ) {
+    //   console.log("ocr", error, text)
+    // })
+    const text = await ocrad(imageFile);
+    console.log(text);
+    db.collection("issue").save(
+      {
+        date: new Date(),
+        imageData,
+        description: req.body.description,
+        userId: req.user._id,
+      },
+      (err, result) => {
+        if (err) return console.log(err);
+        console.log("saved to database");
+        res.redirect("/profile");
+      }
+    );
+  });
   // normal routes ===============================================================
 
   // show the home page (will also have our login links)
@@ -46,46 +49,43 @@ app.post('/issue', upload.single('image'), async(req, res, next) => {
   // PROFILE SECTION =========================
   app.get("/profile", isLoggedIn, function (req, res) {
     db.collection("userVitals")
-      .find()
+      .find({ userId: req.user_id })
       .toArray((err, result) => {
         if (err) return console.log(err);
         db.collection("issue")
-          .find()
+          .find({ userId: req.user_id })
           .toArray((err, issues) => {
             if (err) return console.log(err);
             db.collection("responses")
               .find()
               .toArray((err, message) => {
                 if (err) return console.log(err);
-            res.render("profile.ejs", {
-              user: req.user,
-              userVitals: result,
-              responses: message,
-              issues: issues
-            });
+                res.render("profile.ejs", {
+                  user: req.user,
+                  userVitals: result,
+                  responses: message,
+                  issues: issues,
+                });
+              });
           });
-
       });
   });
-
   // DR PROFILE SECTION =========================
   app.get("/docProfile", isLoggedIn, function (req, res) {
-
-        db.collection("issue")
+    db.collection("issue")
+      .find()
+      .toArray((err, issues) => {
+        if (err) return console.log(err);
+        db.collection("responses")
           .find()
-          .toArray((err, issues) => {
+          .toArray((err, result) => {
             if (err) return console.log(err);
-            db.collection("responses")
-              .find()
-              .toArray((err, result) => {
-                if (err) return console.log(err);
             res.render("docProfile.ejs", {
               user: req.user,
               responses: result,
-              issues: issues
+              issues: issues,
             });
           });
-        });
       });
   });
 
@@ -109,7 +109,14 @@ app.post('/issue', upload.single('image'), async(req, res, next) => {
 
   app.post("/vitals", (req, res) => {
     db.collection("userVitals").save(
-      { date: req.body.date, weight: req.body.weight, height: req.body.height, bp: req.body.bp, pulse: req.body.pulse },
+      {
+        date: req.body.date,
+        weight: req.body.weight,
+        height: req.body.height,
+        bp: req.body.bp,
+        pulse: req.body.pulse,
+        user: req.user._id,
+      },
       (err, result) => {
         if (err) return console.log(err);
         console.log("saved to database");
@@ -120,7 +127,13 @@ app.post('/issue', upload.single('image'), async(req, res, next) => {
 
   app.put("/vitals", (req, res) => {
     db.collection("userVitals").findOneAndUpdate(
-      { date: req.body.date, weight: req.body.weight, height: req.body.height, bp: req.body.bp, pulse: req.body.pulse },
+      {
+        date: req.body.date,
+        weight: req.body.weight,
+        height: req.body.height,
+        bp: req.body.bp,
+        pulse: req.body.pulse,
+      },
       {
         $set: {
           thumbUp: req.body.thumbUp + 1,
@@ -138,7 +151,13 @@ app.post('/issue', upload.single('image'), async(req, res, next) => {
   });
   app.put("/vitals", (req, res) => {
     db.collection("userVitals").findOneAndUpdate(
-      {  date: req.body.date, weight: req.body.weight, height: req.body.height, bp: req.body.bp, pulse: req.body.pulse },
+      {
+        date: req.body.date,
+        weight: req.body.weight,
+        height: req.body.height,
+        bp: req.body.bp,
+        pulse: req.body.pulse,
+      },
       {
         $set: {
           thumbDown: req.body.thumbUp - 1,
@@ -155,12 +174,21 @@ app.post('/issue', upload.single('image'), async(req, res, next) => {
     );
   });
 
-  app.delete('/vitals', (req, res) => {
-    db.collection('userVitals').findOneAndDelete({ date: req.body.date, weight: req.body.weight, height: req.body.height, bp: req.body.bp, pulse: req.body.pulse }, (err, result) => {
-      if (err) return res.send(500, err)
-      res.send('Message deleted!')
-    })
-  })
+  app.delete("/vitals", (req, res) => {
+    db.collection("userVitals").findOneAndDelete(
+      {
+        date: req.body.date,
+        weight: req.body.weight,
+        height: req.body.height,
+        bp: req.body.bp,
+        pulse: req.body.pulse,
+      },
+      (err, result) => {
+        if (err) return res.send(500, err);
+        res.send("Message deleted!");
+      }
+    );
+  });
 
   // =============================================================================
   // AUTHENTICATE (FIRST LOGIN) ==================================================
@@ -252,7 +280,6 @@ app.post('/issue', upload.single('image'), async(req, res, next) => {
       failureFlash: true, // allow flash messages
     })
   );
-
 };
 
 // route middleware to ensure user is logged in
