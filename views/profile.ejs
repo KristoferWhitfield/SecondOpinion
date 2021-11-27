@@ -83,11 +83,19 @@
                   <input type="file" id="image"
                          name="image" value="" required>
               </div>
+
+              <select name="chosenDoctorId">
+                <% for(var i=0; i<doctors.length; i++) {%>
+                  <option value="<%= doctors[i]._id%>"><%= doctors[i].local.email %></option>
+
+                    <% } %>
+                  </select>
               <div>
                   <button type="submit">Submit</button>
               </div>
           </form>
           <ul class="vitals">
+            <%= console.log(issues)%>
           <% for(var i=0; i<issues.length; i++) {%>
             <li class="vitals">
               <span><%= issues[i].date %></span>

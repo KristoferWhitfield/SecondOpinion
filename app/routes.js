@@ -31,6 +31,7 @@ module.exports = function (app, passport, db, ObjectId) {
         imageData,
         description: req.body.description,
         userId: req.user._id,
+        chosenDoctorId: ObjectId(req.body.chosenDoctorId)
       },
       (err, result) => {
         if (err) return console.log(err);
@@ -49,13 +50,17 @@ module.exports = function (app, passport, db, ObjectId) {
   // PROFILE SECTION =========================
   app.get("/profile", isLoggedIn, function (req, res) {
     db.collection("userVitals")
-      .find({ userId: req.user_id })
+      .find({ userId: req.user._id })
       .toArray((err, result) => {
         if (err) return console.log(err);
         db.collection("issue")
-          .find({ userId: req.user_id })
+          .find({ userId: req.user._id })
           .toArray((err, issues) => {
             if (err) return console.log(err);
+            db.collection("users")
+            .find({ "local.userType": "doctor" })
+              .toArray((err, doctors) => {
+                if (err) return console.log(err);
             db.collection("responses")
               .find()
               .toArray((err, message) => {
@@ -65,15 +70,17 @@ module.exports = function (app, passport, db, ObjectId) {
                   userVitals: result,
                   responses: message,
                   issues: issues,
+                  doctors: doctors
                 });
               });
+            });
           });
       });
   });
   // DR PROFILE SECTION =========================
   app.get("/docProfile", isLoggedIn, function (req, res) {
     db.collection("issue")
-      .find()
+      .find({chosenDoctorId: req.user._id})
       .toArray((err, issues) => {
         if (err) return console.log(err);
         db.collection("responses")
