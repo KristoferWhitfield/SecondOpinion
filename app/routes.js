@@ -24,11 +24,12 @@ module.exports = function (app, passport, db, ObjectId) {
     //   console.log("ocr", error, text)
     // })
     const text = await ocrad(imageFile);
-    console.log(text);
+
     db.collection("issue").save(
       {
         date: new Date(),
         imageData,
+        text,
         description: req.body.description,
         userId: req.user._id,
         chosenDoctorId: ObjectId(req.body.chosenDoctorId)
@@ -40,6 +41,18 @@ module.exports = function (app, passport, db, ObjectId) {
       }
     );
   });
+
+  app.get("/documentReader/:_id", isLoggedIn, function (req, res) {
+    db.collection("issue")
+      .find({_id: ObjectId(req.params._id)})
+      .toArray((err, issues) => {
+        if (err) return console.log(err);
+            res.render("documentReader.ejs", {
+              user: req.user,
+              issues: issues,
+          });
+      });
+  });
   // normal routes ===============================================================
 
   // show the home page (will also have our login links)
@@ -50,7 +63,7 @@ module.exports = function (app, passport, db, ObjectId) {
   // PROFILE SECTION =========================
   app.get("/profile", isLoggedIn, function (req, res) {
     db.collection("userVitals")
-      .find({ userId: req.user._id })
+      .find({ user: req.user._id })
       .toArray((err, result) => {
         if (err) return console.log(err);
         db.collection("issue")
@@ -62,7 +75,7 @@ module.exports = function (app, passport, db, ObjectId) {
               .toArray((err, doctors) => {
                 if (err) return console.log(err);
             db.collection("responses")
-              .find()
+              .find({patientId: req.user._id})
               .toArray((err, message) => {
                 if (err) return console.log(err);
                 res.render("profile.ejs", {
@@ -105,7 +118,7 @@ module.exports = function (app, passport, db, ObjectId) {
   // message board routes ===============================================================
   app.post("/docResponse", (req, res) => {
     db.collection("responses").save(
-      { responses: req.body.responses },
+      { responses: req.body.responses, user: req.user._id, issueId: ObjectId(req.body.issueId), patientId: ObjectId(req.body.patientId)},
       (err, result) => {
         if (err) return console.log(err);
         console.log("saved to database");
@@ -141,39 +154,7 @@ module.exports = function (app, passport, db, ObjectId) {
         bp: req.body.bp,
         pulse: req.body.pulse,
       },
-      {
-        $set: {
-          thumbUp: req.body.thumbUp + 1,
-        },
-      },
-      {
-        sort: { _id: -1 },
-        upsert: true,
-      },
-      (err, result) => {
-        if (err) return res.send(err);
-        res.send(result);
-      }
-    );
-  });
-  app.put("/vitals", (req, res) => {
-    db.collection("userVitals").findOneAndUpdate(
-      {
-        date: req.body.date,
-        weight: req.body.weight,
-        height: req.body.height,
-        bp: req.body.bp,
-        pulse: req.body.pulse,
-      },
-      {
-        $set: {
-          thumbDown: req.body.thumbUp - 1,
-        },
-      },
-      {
-        sort: { _id: -1 },
-        upsert: true,
-      },
+
       (err, result) => {
         if (err) return res.send(err);
         res.send(result);
