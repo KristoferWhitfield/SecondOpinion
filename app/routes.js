@@ -178,6 +178,23 @@ module.exports = function (app, passport, db, ObjectId) {
     );
   });
 
+  app.delete("/issues", (req, res) => {
+    db.collection("issue").findOneAndDelete(
+      {
+        date: new Date(),
+        imageData,
+        text,
+        description: req.body.description,
+        userId: req.user._id,
+        chosenDoctorId: ObjectId(req.body.chosenDoctorId)
+      },
+      (err, result) => {
+        if (err) return res.send(500, err);
+        res.send("Message deleted!");
+      }
+    );
+  });
+
   // =============================================================================
   // AUTHENTICATE (FIRST LOGIN) ==================================================
   // =============================================================================

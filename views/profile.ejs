@@ -17,6 +17,7 @@
 <div class="container">
 
     <header>
+      <%= user._id %>
       <!-- maybe change into logo -->
       <i class="fas fa-heartbeat"></i>
       <!-- user name will go here based on whose loged in(backend) -->
@@ -99,6 +100,7 @@
           <% for(var i=0; i<issues.length; i++) {%>
             <li class="vitals">
               <span><%= issues[i].date %></span>
+              <span><%= issues[i].userId %></span>
               <span><%= issues[i].description %></span>
               <img src="data:image/jpeg;base64,
                    <%=issues[i].imageData.toString('base64')%>">
@@ -111,7 +113,7 @@
                          <% } %>
                    </ul>
                    <% } %>
-              <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span>
+              <span><i class="fas fa-trash"></i></span>
             </li>
           <% } %>
           </ul>
