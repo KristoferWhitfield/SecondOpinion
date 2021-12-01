@@ -1,32 +1,47 @@
 body {
   background-color: #008e8f;
 }
+
+.textBox {
+  background-color: lightgray;
+  height: 800px;
+  width: 800px;
+  margin-left: 270px;
+  border-radius: 7px;
+  border: solid white 2px;
+  margin-top: 30px;
+}
+
 h1 {
-  clear: both;
-  font-size: 37px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+  font-size: 40px;
   text-align: center;
+  font-family: 'DM Serif Display', serif;
 }
 
 p {
-  text-align: left;
-  font-size: 35px;
-  font-family: "Bebas Neue", cursive;
+  text-align: center;
+  font-size: 32px;
+  font-family: 'DM Serif Display', serif;
+}
+
+img {
+  margin-left: 250px;
+  align-items: center;
+  height: 300px;
+  margin-bottom: 20px;
 }
 section {
   height: 400px;
   padding-left: 20px;
 }
 h2 {
-  text-align: left;
+  text-align: center;
   font-size: 35px;
-  font-family: "Bebas Neue", cursive;
+  font-family: 'DM Serif Display', serif;
 }
 
-.jumbotron {
-  height: 550px;
-}
-
-img {
-  float: left;
-  height: 300px;
+.btn-primary{
+  background-color: #008e8f
 }

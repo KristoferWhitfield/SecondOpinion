@@ -101,6 +101,7 @@
             <li class="vitals">
               <span><%= issues[i].date %></span>
               <span><%= issues[i].description %></span>
+              <span><%= issues[i].userName %></span>
               <img src="data:image/jpeg;base64,
                    <%=issues[i].imageData.toString('base64')%>">
                    <% for (let j = 0; j <responses.length; j++) {%>

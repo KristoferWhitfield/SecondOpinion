@@ -32,7 +32,8 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
         text,
         description: req.body.description,
         userId: req.user._id,
-        chosenDoctorId: ObjectId(req.body.chosenDoctorId)
+        chosenDoctorId: ObjectId(req.body.chosenDoctorId),
+        userName: req.user.local.email
       },
       (err, result) => {
         if (err) return console.log(err);

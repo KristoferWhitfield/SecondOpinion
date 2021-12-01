@@ -1,45 +1,43 @@
 <!doctype html>
 <html>
 <head>
-    <title>Second Opinion Patient Profile</title>
+    <title>Second Opinion Patient Signup</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="signup.css">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
-<div class="container">
-<div class="col-sm-6 col-sm-offset-3">
 
-    <h1><span class="fa fa-sign-in"></span> Signup</h1>
 
-    <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
-    <% } %>
 
-    <!-- LOGIN FORM -->
-    <form action="/signup" method="post">
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" class="form-control" name="email">
+<div class="form-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6">
+                <div class="form-container">
+                    <form class="form-horizontal" action="/signup" method="post">
+                        <h3 class="title">Patient Signup</h3>
+                        <div class="form-group">
+                            <span class="input-icon"><i class="fa fa-user"></i></span>
+                            <input class="form-control" name="email" type="text" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <span class="input-icon"><i class="fa fa-lock"></i></span>
+                            <input class="form-control" name="password" type="password" placeholder="Password">
+                            <input type="text" class="form-control" name="userType" value="patient" id="hidden">
+                        </div>
+                        <span class="forgot-pass"></span>
+                        <button type="submit" class="btn signin">Signup</button>
+                    </form>
+                    <section class="signupBox">
+                      <p>Already have an account? <a href="/login">Login</a></p>
+                      <p>Or go <a href="/">Home</a>.</p>
+                    </section>
+                </div>
+            </div>
         </div>
-
-
-        <input hidden type="text" class="form-control" name="userType" value="patient">
-
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" name="password">
-        </div>
-
-        <button type="submit" class="btn btn-warning btn-lg">Signup</button>
-    </form>
-
-    <hr>
-
-    <p>Already have an account? <a href="/login">Login</a></p>
-    <p>Or go <a href="/">home</a>.</p>
-
-</div>
+    </div>
 </div>
 </body>
 </html>

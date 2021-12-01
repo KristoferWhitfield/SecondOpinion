@@ -61,7 +61,7 @@
           <% for(var i=0; i<issues.length; i++) {%>
             <li class="vitals">
               <span><%= issues[i].date %></span>
-              <span><%= issues[i].userId %></span>
+              <span><%= issues[i].userName %></span>
               <span><%= issues[i].description %></span>
               <img src="data:image/jpeg;base64,
                    <%=issues[i].imageData.toString('base64')%>">
