@@ -23,7 +23,7 @@ var db;
 mongoose.connect(configDB.url, (err, database) => {
   if (err) return console.log(err);
   db = database;
-  require("./app/routes.js")(app, passport, db, ObjectId);
+  require("./app/routes.js")(app, passport, db, ObjectId, mongoose);
 }); // connect to our database
 
 require("./config/passport")(passport); // pass passport for configuration

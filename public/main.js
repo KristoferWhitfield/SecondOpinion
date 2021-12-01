@@ -1,8 +1,8 @@
-
 var trash = document.getElementsByClassName("fas fa-trash-alt");
 
-var issueTrash = document.getElementsByClassName("fas fa-trash");
+let issueTrash = document.querySelectorAll(".deleteIssues");
 
+let responseTrash = document.querySelectorAll(".deleteResponses");
 
 Array.from(trash).forEach(function (element) {
   element.addEventListener("click", function () {
@@ -29,24 +29,58 @@ Array.from(trash).forEach(function (element) {
   });
 });
 
-Array.from(issueTrash).forEach(function (element) {
-  element.addEventListener("click", function () {
-    const date = this.parentNode.parentNode.childNodes[1].innerText;
-    const description = this.parentNode.parentNode.childNodes[3].innerText;
-    const imageData = this.parentNode.parentNode.childNodes[5].innerText;
-    fetch("issues", {
-      method: "delete",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        date: date,
-        imageData: imageData,
-        description: description,
-
-      }),
-    }).then(function (response) {
-      window.location.reload();
-    });
-  });
+issueTrash.forEach((button) => {
+  button.addEventListener("click", deleteIssue);
 });
+
+function deleteIssue(e) {
+  issueTrashid = e.currentTarget.dataset.id;
+  console.log(issueTrashid, "issueId");
+  fetch("issues", {
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      issueTrash: issueTrashid,
+    }),
+  }).then(function (response) {
+    window.location.reload();
+  });
+}
+
+responseTrash.forEach((button) => {
+  button.addEventListener("click", deleteResponse);
+});
+
+function deleteResponse(e) {
+  responseTrashid = e.currentTarget.dataset.id;
+  fetch("responses", {
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      responseTrash: responseTrashid,
+    }),
+  }).then(function (response) {
+    window.location.reload();
+  });
+}
+// Array.from(issueTrash).forEach(function (element) {
+//   element.addEventListener("click", function () {
+//
+//     fetch("issues", {
+//       method: "delete",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         user: req.user._id
+//
+//       }),
+//     }).then(function (response) {
+//       window.location.reload();
+//     });
+//   });
+// });

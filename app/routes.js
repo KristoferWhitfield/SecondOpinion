@@ -1,4 +1,4 @@
-module.exports = function (app, passport, db, ObjectId) {
+module.exports = function (app, passport, db, ObjectId, mongoose) {
   //multer
   const fs = require("fs");
   const path = require("path");
@@ -179,14 +179,23 @@ module.exports = function (app, passport, db, ObjectId) {
   });
 
   app.delete("/issues", (req, res) => {
+
     db.collection("issue").findOneAndDelete(
       {
-        date: new Date(),
-        imageData,
-        text,
-        description: req.body.description,
-        userId: req.user._id,
-        chosenDoctorId: ObjectId(req.body.chosenDoctorId)
+        _id: ObjectId(req.body.issueTrash)
+      },
+      (err, result) => {
+        if (err) return res.send(500, err);
+        res.send("Message deleted!");
+      }
+    );
+  });
+
+  app.delete("/responses", (req, res) => {
+
+    db.collection("responses").findOneAndDelete(
+      {
+        _id: ObjectId(req.body.responseTrash)
       },
       (err, result) => {
         if (err) return res.send(500, err);

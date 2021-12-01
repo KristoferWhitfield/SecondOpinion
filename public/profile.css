@@ -14,3 +14,15 @@ header > i {
 body {
     background-color: #008e8f;
 }
+
+img {
+  width: 150px;
+  height: 250px;
+  transition:transform 0.25s ease;
+}
+
+
+img:hover {
+    -webkit-transform:scale(4); /* or some other value */
+    transform:scale(4);
+}

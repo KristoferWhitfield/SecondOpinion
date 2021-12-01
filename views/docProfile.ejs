@@ -16,7 +16,7 @@
 <div class="container">
 
     <header>
-      <%= user._id %>
+      <%= user.local.email %>
       <!-- maybe change into logo -->
       <i class="fas fa-heartbeat"></i>
       <!-- user name will go here based on whose loged in(backend) -->
@@ -66,7 +66,6 @@
               <img src="data:image/jpeg;base64,
                    <%=issues[i].imageData.toString('base64')%>">
               <button type="submit"><a href="/documentReader/<%= issues[i]._id %>">Convert Doc</a></button>
-              <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span>
             </li>
 
             <% for (let j = 0; j <responses.length; j++) {%>
@@ -74,7 +73,7 @@
               <% if(responses[j].issueId.equals(issues[i]._id)){%>
               <li class="responses">
                 <p><%= responses[j].responses %></p>
-
+                <span class="deleteResponses" data-id="<%= responses[j]._id%>"><i class="fas fa-eraser"></i></span>
               </li>
                 <% } %>
 
