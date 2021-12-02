@@ -29,14 +29,16 @@
     <div class="vitalBox">
           <h3>Vitals</h3>
           <ul class="vitals">
+
           <% for(var i=0; i<userVitals.length; i++) {%>
             <li class="vitals">
-              <span><span class="vitalLabel">Date:</span> <%= userVitals[i].date %></span>
-              <span><span class="vitalLabel">Weight:</span> <%= userVitals[i].weight %></span>
-              <span><span class="vitalLabel">Height:</span> <%= userVitals[i].height %></span>
-              <span><span class="vitalLabel">Bp:</span> <%= userVitals[i].bp %></span>
-              <span><span class="vitalLabel">Pulse:</span> <%= userVitals[i].pulse %></span>
-              <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span>
+              <span class="date"><span class="vitalLabel">Date:</span> <%= userVitals[i].date %></span>
+              <span class="weight"><span class="vitalLabel">Weight:</span> <%= userVitals[i].weight %></span>
+              <span class="height"><span class="vitalLabel">Height:</span> <%= userVitals[i].height %></span>
+              <span class="bp"><span class="vitalLabel">Bp:</span> <%= userVitals[i].bp %></span>
+              <span class="pulse"><span class="vitalLabel">Pulse:</span> <%= userVitals[i].pulse %></span>
+              <!-- <span><i class="fas fa-trash-alt" aria-hidden="true"></i></span> -->
+              <span class="deleteVitals" data-id="<%= userVitals[i]._id%>"><i class="fas fa-trash-alt" ></i></span>
             </li>
           <% } %>
           </ul>

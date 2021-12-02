@@ -165,11 +165,7 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
   app.delete("/vitals", (req, res) => {
     db.collection("userVitals").findOneAndDelete(
       {
-        date: req.body.date,
-        weight: req.body.weight,
-        height: req.body.height,
-        bp: req.body.bp,
-        pulse: req.body.pulse,
+        _id: ObjectId(req.body.vitalsTrash),
       },
       (err, result) => {
         if (err) return res.send(500, err);
