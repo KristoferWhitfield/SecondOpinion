@@ -2,7 +2,6 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
   //multer
   const fs = require("fs");
   const path = require("path");
-  // const textract = require('textract');
   const multer = require("multer");
   const ocrad = require("async-ocrad");
   const storage = multer.diskStorage({
@@ -15,14 +14,10 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
   });
 
   var upload = multer({ storage: storage });
-  // const config = {}
+
   app.post("/issue", upload.single("image"), async (req, res, next) => {
     const imageFile = path.join(__dirname + "/../uploads/" + req.file.filename);
     const imageData = fs.readFileSync(imageFile);
-    // console.log(imageFile)
-    // textract.fromFileWithMimeAndPath("image/jpeg", imageFile, config, function( error, text ) {
-    //   console.log("ocr", error, text)
-    // })
     const text = await ocrad(imageFile);
 
     db.collection("issue").save(
@@ -33,7 +28,7 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
         description: req.body.description,
         userId: req.user._id,
         chosenDoctorId: ObjectId(req.body.chosenDoctorId),
-        userName: req.user.local.email
+        userName: req.user.local.email,
       },
       (err, result) => {
         if (err) return console.log(err);
@@ -45,13 +40,13 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
 
   app.get("/documentReader/:_id", isLoggedIn, function (req, res) {
     db.collection("issue")
-      .find({_id: ObjectId(req.params._id)})
+      .find({ _id: ObjectId(req.params._id) })
       .toArray((err, issues) => {
         if (err) return console.log(err);
-            res.render("documentReader.ejs", {
-              user: req.user,
-              issues: issues,
-          });
+        res.render("documentReader.ejs", {
+          user: req.user,
+          issues: issues,
+        });
       });
   });
   // normal routes ===============================================================
@@ -72,29 +67,29 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
           .toArray((err, issues) => {
             if (err) return console.log(err);
             db.collection("users")
-            .find({ "local.userType": "doctor" })
+              .find({ "local.userType": "doctor" })
               .toArray((err, doctors) => {
                 if (err) return console.log(err);
-            db.collection("responses")
-              .find({patientId: req.user._id})
-              .toArray((err, message) => {
-                if (err) return console.log(err);
-                res.render("profile.ejs", {
-                  user: req.user,
-                  userVitals: result,
-                  responses: message,
-                  issues: issues,
-                  doctors: doctors
-                });
+                db.collection("responses")
+                  .find({ patientId: req.user._id })
+                  .toArray((err, message) => {
+                    if (err) return console.log(err);
+                    res.render("profile.ejs", {
+                      user: req.user,
+                      userVitals: result,
+                      responses: message,
+                      issues: issues,
+                      doctors: doctors,
+                    });
+                  });
               });
-            });
           });
       });
   });
   // DR PROFILE SECTION =========================
   app.get("/docProfile", isLoggedIn, function (req, res) {
     db.collection("issue")
-      .find({chosenDoctorId: req.user._id})
+      .find({ chosenDoctorId: req.user._id })
       .toArray((err, issues) => {
         if (err) return console.log(err);
         db.collection("responses")
@@ -116,10 +111,14 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
     res.redirect("/");
   });
 
-  // message board routes ===============================================================
   app.post("/docResponse", (req, res) => {
     db.collection("responses").save(
-      { responses: req.body.responses, user: req.user._id, issueId: ObjectId(req.body.issueId), patientId: ObjectId(req.body.patientId)},
+      {
+        responses: req.body.responses,
+        user: req.user._id,
+        issueId: ObjectId(req.body.issueId),
+        patientId: ObjectId(req.body.patientId),
+      },
       (err, result) => {
         if (err) return console.log(err);
         console.log("saved to database");
@@ -180,10 +179,9 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
   });
 
   app.delete("/issues", (req, res) => {
-
     db.collection("issue").findOneAndDelete(
       {
-        _id: ObjectId(req.body.issueTrash)
+        _id: ObjectId(req.body.issueTrash),
       },
       (err, result) => {
         if (err) return res.send(500, err);
@@ -193,10 +191,9 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
   });
 
   app.delete("/responses", (req, res) => {
-
     db.collection("responses").findOneAndDelete(
       {
-        _id: ObjectId(req.body.responseTrash)
+        _id: ObjectId(req.body.responseTrash),
       },
       (err, result) => {
         if (err) return res.send(500, err);
@@ -241,23 +238,6 @@ module.exports = function (app, passport, db, ObjectId, mongoose) {
       failureFlash: true, // allow flash messages
     })
   );
-
-  // =============================================================================
-  // UNLINK ACCOUNTS =============================================================
-  // =============================================================================
-  // used to unlink accounts. for social accounts, just remove the token
-  // for local account, remove email and password
-  // user account will stay active in case they want to reconnect in the future
-
-  // local -----------------------------------
-  app.get("/unlink/local", isLoggedIn, function (req, res) {
-    var user = req.user;
-    user.local.email = undefined;
-    user.local.password = undefined;
-    user.save(function (err) {
-      res.redirect("/profile");
-    });
-  });
 
   // =============================================================================
   // AUTHENTICATE (FIRST LOGIN) ==================================================

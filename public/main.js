@@ -67,20 +67,3 @@ function deleteResponse(e) {
     window.location.reload();
   });
 }
-// Array.from(issueTrash).forEach(function (element) {
-//   element.addEventListener("click", function () {
-//
-//     fetch("issues", {
-//       method: "delete",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         user: req.user._id
-//
-//       }),
-//     }).then(function (response) {
-//       window.location.reload();
-//     });
-//   });
-// });
