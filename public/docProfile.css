@@ -300,8 +300,10 @@ header {
 }
 
 .issuesLeft{
-  padding-left: 35px;
-  padding-top: 25px;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: left;
 }
 
 .issuesLeft > p {
@@ -310,15 +312,39 @@ header {
 
 .issuesRight{
   padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .deleteIssues {
   margin-left: 20px;
 }
 
-.fa-trash {
+.fa-eraser {
   color: darkblue;
   font-size: 25px;
+}
+
+.convert {
+  background-color: darkblue;
+  border-radius: 2px;
+  margin-left: 10px;
+}
+
+.convert:hover {
+  background-color: lightblue;
+}
+
+.convertA{
+  text-decoration: none;
+  color: white;
+}
+
+.textBox{
+  margin-top: 15px;
+}
+
+#diagnosisLabel{
+  font-size: 20px;
 }
 
 

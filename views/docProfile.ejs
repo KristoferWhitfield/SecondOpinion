@@ -28,36 +28,35 @@
       <% for(var i=0; i<issues.length; i++) {%>
         <div class="eachIssue">
           <div class="issuesLeft">
-            <p><p class="bold">Date:</p> <%= issues[i].date %></p>
-            <p><p class="bold">Date:</p> <%= issues[i].userName %></p>
-            <p><p class="bold">Health Issue:</p> <%= issues[i].description %></p>
+            <p><span class="bold">Date:</span> <%= issues[i].date %></p>
+            <p><span class="bold">Patient:</span> <%= issues[i].userName %></p>
+            <p><span class="bold">Health Issue:</span> <%= issues[i].description %></p>
             <% for (let j = 0; j <responses.length; j++) {%>
             <% if(responses[j].issueId.equals(issues[i]._id)){%>
-              <span class="deleteResponses" data-id="<%= responses[j]._id%>"><i class="fas fa-eraser" ></i></span>
-            <p><p class="bold">Doctor Diagnosis:</p> <%= responses[j].responses %></p>
+            <p><span class="bold">Doctor Diagnosis:</span> <%= responses[j].responses %></p>
+            <span class="deleteResponses" data-id="<%= responses[j]._id%>"><i class="fas fa-eraser" ></i></span>
             <% } %>
           <% } %>
           </div>
           <div class="issuesRight">
             <img src="data:image/jpeg;base64,
                <%=issues[i].imageData.toString('base64')%>">
-            <button type="submit"><a href="/documentReader/<%= issues[i]._id %>">Convert Doc</a></button>
-
+            <button class="convert" type="submit"><a class="convertA" href="/documentReader/<%= issues[i]._id %>">Convert to Text</a></button>
+            <form action="/docResponse" method="POST" enctype="application/x-www-form-urlencoded">
+                <div>
+                    <label id="diagnosisLabel" class="bold" for="responses">Diagnosis: </label>
+                    <textarea class="textBox" rows="5" cols="33" placeholder="Enter Diagnosis Here"name="responses" required></textarea>
+                    <input hidden type="text" name="issueId" value="<%=issues[i]._id %>">
+                    <input hidden type="text" name="patientId" value="<%=issues[i].userId %>">
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
           </div>
         </div>
 
-        <form action="/docResponse" method="POST" enctype="application/x-www-form-urlencoded">
-            <div>
-                <label for="responses">Diagnosis</label>
-                <input type="text" id="name" placeholder="Diagnosis"
-                       value="" name="responses" required>
-                <input hidden type="text" name="issueId" value="<%=issues[i]._id %>">
-                <input hidden type="text" name="patientId" value="<%=issues[i].userId %>">
-            </div>
-            <div>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
+
       <% } %>
 
     </div>
