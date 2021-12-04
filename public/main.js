@@ -4,7 +4,6 @@ let issueTrash = document.querySelectorAll(".deleteIssues");
 
 let responseTrash = document.querySelectorAll(".deleteResponses");
 
-
 trash.forEach((button) => {
   button.addEventListener("click", deleteVitals);
 });
@@ -23,7 +22,6 @@ function deleteVitals(e) {
     window.location.reload();
   });
 }
-
 
 issueTrash.forEach((button) => {
   button.addEventListener("click", deleteIssue);
